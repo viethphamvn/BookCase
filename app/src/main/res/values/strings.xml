@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">BookCase</string>
+    <string-array name="bookTitle">
+        <item>The Hunger Games</item>
+        <item>Harry Potter and the Order of the Phoenix</item>
+        <item>To Kill a Mockingbird</item>
+        <item>Pride and Prejudice</item>
+        <item>Twilight</item>
+        <item>The Book Thief</item>
+        <item>Animal Farm</item>
+        <item>The chronicles of Narnia</item>
+        <item>Gone with the Wind</item>
+        <item>The Fault in Our Stars</item>
+        <item>The Giving Tree</item>
+        <item>Wuthering Heights</item>
+    </string-array>
 </resources>
