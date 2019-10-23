@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<String> bookTitle = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.bookTitle)));
 
-        
+
 
     }
 }
