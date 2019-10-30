@@ -1,40 +1,32 @@
 package edu.temple.bookcase;
 
-
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link BookPagerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class BookPagerFragment extends Fragment {
+public class BookTitleFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "bookTitle";
 
     // TODO: Rename and change types of parameters
-    private ArrayList<String> bookTitle;
+    private String bookTitle;
 
+//    private OnFragmentInteractionListener mListener;
 
-    public BookPagerFragment() {
+    public BookTitleFragment() {
         // Required empty public constructor
     }
 
-    public static BookPagerFragment newInstance(ArrayList<String> bookTitle) {
-        BookPagerFragment fragment = new BookPagerFragment();
+    public static BookTitleFragment newInstance(String bookTitle) {
+        BookTitleFragment fragment = new BookTitleFragment();
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_PARAM1, bookTitle);
+        args.putString(ARG_PARAM1, bookTitle);
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,7 +35,7 @@ public class BookPagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            bookTitle = getArguments().getStringArrayList(ARG_PARAM1);
+            bookTitle = getArguments().getString(ARG_PARAM1);
         }
     }
 
@@ -51,10 +43,9 @@ public class BookPagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_book_pager, container, false);
-        ViewPager viewPager = v.findViewById(R.id.viewPager);
-        BookPagerAdapter pagerAdapter = new BookPagerAdapter(getChildFragmentManager(), bookTitle);
-        viewPager.setAdapter(pagerAdapter);
+        View v = inflater.inflate(R.layout.fragment_book_title_pager, container, false);
+        TextView textView = v.findViewById(R.id.textView);
+        textView.setText(bookTitle);
 
         return v;
     }

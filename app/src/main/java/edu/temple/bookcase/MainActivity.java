@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         FrameLayout detailContainer = findViewById(R.id.detailContainer);
 
         BookListFragment bookList;
+        BookPagerFragment bookPager;
 
         if (detailContainer instanceof FrameLayout){ //either landscape or big screen
             Fragment fragment1 = getSupportFragmentManager().findFragmentByTag("BookListFragment");
@@ -33,24 +34,35 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     .beginTransaction()
                     .replace(R.id.fragmentContainer, bookList)
                     .commit();
-
         } else { //single panel display
-            ViewPager viewPager = findViewById(R.id.viewPager);
-            viewPager.setAdapter(new BookPagerAdapter(getSupportFragmentManager(), bookTitle));
-        }
+            Fragment fragment1 = getSupportFragmentManager().findFragmentByTag("BookPagerFragment");
 
+            if (fragment1 == null){
+                bookPager = BookPagerFragment.newInstance(bookTitle);
+            } else {
+                bookPager = (BookPagerFragment)fragment1;
+            }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.pagerContainer, bookPager)
+                    .commit();
+        }
     }
 
     @Override
     public void onBookSelected(String bookTitle) {
-        Bundle bundle = new Bundle();
-        bundle.putString("bookTitle", bookTitle);
-        BookDetailFragment bookDetail = new BookDetailFragment();
-        bookDetail.setArguments(bundle);
+        BookDetailFragment fragment = (BookDetailFragment) getSupportFragmentManager().findFragmentByTag("BookDetailFragment");
+        if (fragment != null){
+            fragment.setText(bookTitle);
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putString("bookTitle", bookTitle);
+            fragment = BookDetailFragment.newInstance(bookTitle);
+            fragment.setArguments(bundle);
+        }
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.detailContainer, bookDetail)
+                .replace(R.id.detailContainer, fragment)
                 .commit();
     }
 }
