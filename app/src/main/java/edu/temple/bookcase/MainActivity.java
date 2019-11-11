@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             initializeBook(bookJSON);
             //TODO: if this succeed then assign to static bookCollection --> use temp collection
             if (bookCollection.size() > 0) {
+                currentDisplayedBook = 0;
                 FrameLayout detailContainer = findViewById(R.id.detailContainer);
 
                 BookListFragment bookList;
@@ -73,10 +74,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                             .replace(R.id.pagerContainer, bookPager)
                             .commit();
                 }
-            } else {
-                Toast.makeText(getApplicationContext(),
-                    "Can't find requested book",
-                    Toast.LENGTH_LONG).show();
             }
             return false;
         }
@@ -144,7 +141,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
     public void initializeBook(JSONArray js){
-        bookCollection.clear();
+        if (js.length() > 0) {
+            bookCollection.clear();
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    "Can't find requested book",
+                    Toast.LENGTH_LONG).show();
+        }
         for (int i = 0; i < js.length(); i++){
             try {
                 JSONObject e = js.getJSONObject(i);
