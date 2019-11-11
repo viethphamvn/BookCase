@@ -4,18 +4,21 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class BookTitleFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "bookTitle";
 
     // TODO: Rename and change types of parameters
-    private String bookTitle;
+    private Book theBook;
 
 //    private OnFragmentInteractionListener mListener;
 
@@ -23,10 +26,10 @@ public class BookTitleFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static BookTitleFragment newInstance(String bookTitle) {
+    public static BookTitleFragment newInstance(Book theBook) {
         BookTitleFragment fragment = new BookTitleFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, bookTitle);
+        args.putSerializable("theBook", theBook);
         fragment.setArguments(args);
         return fragment;
     }
@@ -35,7 +38,7 @@ public class BookTitleFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            bookTitle = getArguments().getString(ARG_PARAM1);
+            theBook = new Book((Book)getArguments().getSerializable("theBook"));
         }
     }
 
@@ -44,8 +47,14 @@ public class BookTitleFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_title_pager, container, false);
-        TextView textView = v.findViewById(R.id.textView);
-        textView.setText(bookTitle);
+        TextView titleView = v.findViewById(R.id.titleView);
+        TextView authorView = v.findViewById(R.id.authorView);
+        TextView publishedView = v.findViewById(R.id.publishedView);
+
+        titleView.setText("Title: " + theBook.title);
+        authorView.setText("Author" + theBook.author);
+        publishedView.setText("Published on: " + theBook.published);
+        Picasso.get().load(theBook.coverURL).into((ImageView)v.findViewById(R.id.coverView));
 
         return v;
     }

@@ -1,15 +1,19 @@
 package edu.temple.bookcase;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -21,20 +25,23 @@ import java.util.ArrayList;
 public class BookPagerFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "bookTitle";
-
+    private static final String ARG_PARAM1 = "bookCollection";
+    private static final String ARG_PARAM2 = "currentItem";
+    private BookPagerInterface parentFragment;
     // TODO: Rename and change types of parameters
-    private ArrayList<String> bookTitle;
-
+    private ArrayList<Book> bookCollection;
+    private int currentItem;
 
     public BookPagerFragment() {
         // Required empty public constructor
     }
 
-    public static BookPagerFragment newInstance(ArrayList<String> bookTitle) {
+    public static BookPagerFragment newInstance(ArrayList<Book> bookCollection, int currentItem) {
+
         BookPagerFragment fragment = new BookPagerFragment();
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_PARAM1, bookTitle);
+        args.putSerializable(ARG_PARAM1, bookCollection);
+        args.putInt(ARG_PARAM2, currentItem);
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,7 +50,19 @@ public class BookPagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            bookTitle = getArguments().getStringArrayList(ARG_PARAM1);
+            bookCollection = (ArrayList<Book>) getArguments().getSerializable(ARG_PARAM1);
+            currentItem = getArguments().getInt(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof BookPagerInterface) {
+            parentFragment = (BookPagerInterface) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -52,11 +71,34 @@ public class BookPagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_pager, container, false);
-        ViewPager viewPager = v.findViewById(R.id.viewPager);
-        BookPagerAdapter pagerAdapter = new BookPagerAdapter(getChildFragmentManager(), bookTitle);
+        final ViewPager viewPager = v.findViewById(R.id.viewPager);
+        final BookPagerAdapter pagerAdapter = new BookPagerAdapter(getChildFragmentManager(), bookCollection);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(currentItem, true);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                parentFragment.onPageSelect(position);
+                Log.v("real",String.valueOf(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         return v;
+    }
+
+    public interface BookPagerInterface {
+        // TODO: Update argument type and name
+        void onPageSelect(int position);
     }
 
 }

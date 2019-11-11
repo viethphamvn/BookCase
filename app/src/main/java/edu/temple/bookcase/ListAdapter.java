@@ -9,22 +9,22 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class ListAdapter extends BaseAdapter {
-    ArrayList<String> bookTitle;
+    ArrayList<Book> bookCollection;
     Context c;
 
-    public ListAdapter(Context c, ArrayList<String> bookTitle){
-        this.bookTitle = bookTitle;
+    public ListAdapter(Context c, ArrayList<Book> bookCollection){
+        this.bookCollection = bookCollection;
         this.c = c;
     }
 
     @Override
     public int getCount() {
-        return bookTitle.size();
+        return bookCollection.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return bookTitle.get(position);
+        return bookCollection.get(position);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ListAdapter extends BaseAdapter {
             v = new TextView(c);
         }
         v.setTextSize(30);
-        v.setText(bookTitle.get(position));
+        v.setText(bookCollection.get(position).title);
         return v;
     }
 }
