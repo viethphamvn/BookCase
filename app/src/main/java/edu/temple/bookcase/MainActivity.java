@@ -48,31 +48,37 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 currentDisplayedBook = 0;
                 FrameLayout detailContainer = findViewById(R.id.detailContainer);
 
-                BookListFragment bookList;
-                BookPagerFragment bookPager;
-
                 if (detailContainer instanceof FrameLayout) { //either landscape or big screen
-                    Fragment fragment1 = getSupportFragmentManager().findFragmentByTag("BookListFragment");
+                    BookListFragment fragment1 = (BookListFragment) getSupportFragmentManager().findFragmentByTag("bookListFragment");
+
                     if (fragment1 == null) {
-                        bookList = BookListFragment.newInstance(bookCollection);
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .add(R.id.fragmentContainer, BookListFragment.newInstance(bookCollection), "bookListFragment")
+                                .commit();
                     } else {
-                        bookList = (BookListFragment) fragment1;
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .remove(fragment1)
+                                .add(R.id.fragmentContainer, BookListFragment.newInstance(bookCollection), "bookListFragment")
+                                .commit();
                     }
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragmentContainer, bookList)
-                            .commit();
                 } else { //single panel display
-                    Fragment fragment1 = getSupportFragmentManager().findFragmentByTag("BookPagerFragment");
+                    BookPagerFragment fragment1 = (BookPagerFragment)getSupportFragmentManager().findFragmentByTag("bookPagerFragment");
                     //
                     if (fragment1 == null) {
-                        bookPager = BookPagerFragment.newInstance(bookCollection, 0);
+                        Log.v("error","here");
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .add(R.id.pagerContainer, BookPagerFragment.newInstance(bookCollection, 0), "bookPagerFragment")
+                                .commit();
                     } else {
-                        bookPager = (BookPagerFragment) fragment1;
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .remove(fragment1)
+                                .replace(R.id.pagerContainer, BookPagerFragment.newInstance(bookCollection, 0), "bookPagerFragment")
+                                .commit();
                     }
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.pagerContainer, bookPager)
-                            .commit();
                 }
             }
             return false;
@@ -88,14 +94,26 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         if (bookCollection.size() > 0){
             FrameLayout pagerContainer = findViewById(R.id.pagerContainer);
             if (pagerContainer instanceof FrameLayout){ //if portrait
-                BookPagerFragment bookPager = BookPagerFragment.newInstance(bookCollection, currentDisplayedBook);
+                BookPagerFragment fragment1 = (BookPagerFragment) getSupportFragmentManager().findFragmentByTag("bookPagerFragment");
+                if (fragment1 != null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .remove(fragment1)
+                            .commit();
+                }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.pagerContainer, bookPager)
+                        .add(R.id.pagerContainer, BookPagerFragment.newInstance(bookCollection, currentDisplayedBook), "bookPagerFragment")
                         .commit();
+
             } else { //if landscape
-                BookListFragment bookList = BookListFragment.newInstance(bookCollection);
+                BookListFragment fragment1 = (BookListFragment) getSupportFragmentManager().findFragmentByTag("bookListFragment");
+                //TODO: This will be NULL --> Fix
+                if (fragment1 != null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .remove(fragment1)
+                            .commit();
+                }
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainer, bookList)
+                        .add(R.id.fragmentContainer, BookListFragment.newInstance(bookCollection), "bookListFragment")
                         .commit();
                 onBookSelected(currentDisplayedBook);
             }
@@ -168,16 +186,15 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     @Override
     public void onBookSelected(int position) {
         currentDisplayedBook = position;
-        BookDetailFragment fragment = (BookDetailFragment) getSupportFragmentManager().findFragmentByTag("BookDetailFragment");
-        if (fragment != null){
-            fragment.displayBook(bookCollection.get(position));
-        } else {
-            fragment = BookDetailFragment.newInstance(bookCollection.get(position));
+        BookDetailFragment fragment = (BookDetailFragment) getSupportFragmentManager().findFragmentByTag("bookDetailFragment");
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(fragment)
+                    .commit();
         }
-
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.detailContainer, fragment)
+                .replace(R.id.detailContainer, BookDetailFragment.newInstance(bookCollection.get(position)), "bookDetailFragment")
                 .commit();
     }
 

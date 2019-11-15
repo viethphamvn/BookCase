@@ -71,8 +71,8 @@ public class BookPagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_pager, container, false);
-        final ViewPager viewPager = v.findViewById(R.id.viewPager);
-        final BookPagerAdapter pagerAdapter = new BookPagerAdapter(getChildFragmentManager(), bookCollection);
+        ViewPager viewPager = v.findViewById(R.id.viewPager);
+        BookPagerAdapter pagerAdapter = new BookPagerAdapter(getChildFragmentManager(), bookCollection);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(currentItem, true);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
