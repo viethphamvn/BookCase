@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class BookListFragment extends Fragment {
     private static final String ARG_PARAM1 = "bookCollection";
 
     // TODO: Rename and change types of parameters
-    private ArrayList<Book> bookCollection;
+    public ArrayList<Book> bookCollection;
 
     private BookListFragmentInterface parentFragment;
 
@@ -58,7 +59,7 @@ public class BookListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                parentFragment.onBookSelected(position);
+                parentFragment.onBookSelected(position, bookCollection);
             }
         });
 
@@ -76,8 +77,12 @@ public class BookListFragment extends Fragment {
         }
     }
 
+    public ArrayList<Book> getBook(){
+        return bookCollection;
+    }
+
     public interface BookListFragmentInterface {
         // TODO: Update argument type and name
-        void onBookSelected(int position);
+        void onBookSelected(int position, ArrayList<Book> bookCol);
     }
 }

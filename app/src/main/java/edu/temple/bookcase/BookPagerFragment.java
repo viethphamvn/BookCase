@@ -29,7 +29,7 @@ public class BookPagerFragment extends Fragment {
     private static final String ARG_PARAM2 = "currentItem";
     private BookPagerInterface parentFragment;
     // TODO: Rename and change types of parameters
-    private ArrayList<Book> bookCollection;
+    public ArrayList<Book> bookCollection;
     private int currentItem;
 
     public BookPagerFragment() {
@@ -94,6 +94,10 @@ public class BookPagerFragment extends Fragment {
         });
 
         return v;
+    }
+
+    public ArrayList<Book> getBook(){
+        return bookCollection;
     }
 
     public interface BookPagerInterface {
