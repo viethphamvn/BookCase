@@ -13,15 +13,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class BookListFragment extends Fragment {
-    private static final String ARG_PARAM1 = "bookTitle";
+    private static final String ARG_PARAM1 = "bookCollection";
 
     // TODO: Rename and change types of parameters
-    private ArrayList<String> bookTitle;
+    public ArrayList<Book> bookCollection;
 
     private BookListFragmentInterface parentFragment;
 
@@ -29,10 +30,10 @@ public class BookListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static BookListFragment newInstance(ArrayList<String> bookTitle) {
+    public static BookListFragment newInstance(ArrayList<Book> bookCollection) {
         BookListFragment fragment = new BookListFragment();
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_PARAM1, bookTitle);
+        args.putSerializable(ARG_PARAM1, bookCollection);
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,7 +42,7 @@ public class BookListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            bookTitle = getArguments().getStringArrayList(ARG_PARAM1);
+            bookCollection = (ArrayList<Book>)getArguments().getSerializable(ARG_PARAM1);
         }
     }
 
@@ -52,19 +53,18 @@ public class BookListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_book_list, container, false);
         ListView listView = v.findViewById(R.id.listView);
 
-        ListAdapter listAdapter = new ListAdapter(getActivity(), bookTitle);
+        ListAdapter listAdapter = new ListAdapter(getActivity(), bookCollection); //right here
 
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                parentFragment.onBookSelected(bookTitle.get(position));
+                parentFragment.onBookSelected(position, bookCollection);
             }
         });
 
         return v;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -77,8 +77,12 @@ public class BookListFragment extends Fragment {
         }
     }
 
+    public ArrayList<Book> getBook(){
+        return bookCollection;
+    }
+
     public interface BookListFragmentInterface {
         // TODO: Update argument type and name
-        void onBookSelected(String bookTitle);
+        void onBookSelected(int position, ArrayList<Book> bookCol);
     }
 }
